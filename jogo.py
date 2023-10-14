@@ -41,6 +41,12 @@ def personagem2_animacao_atirando():
     
     tela.blit(personagem2_atirando_invertido, personagem2_retangulo)
 
+def mostra_empate():
+    empate = pygame.image.load('assets/Empate/imagem_empate.png').convert_alpha()
+    empate = pygame.transform.scale(empate, (500, 500))
+    tela.blit(empate, (400, 150))
+    
+
 
 
 def mostra_texto():
@@ -83,6 +89,7 @@ for imagem in range(1, 11):
 # Personagem 1 atirando
 for imagem in range(1, 11):
     img = pygame.image.load(f'assets/Personagem1/atirando/Gun_Attack{imagem}.png').convert_alpha()
+    img = pygame.transform.scale(img, (220, 220))
     personagem1_atirando.append(img)
 
 
@@ -119,6 +126,9 @@ contador_segundos = 0
 tecla_a = 0
 tecla_l = 0
 
+# Adiicona o tiro na tela
+
+
 # Controla o fps
 fps = pygame.time.Clock()
 
@@ -144,8 +154,10 @@ while True:
     if contador_segundos >= 10:
         if tecla_a > tecla_l:
             personagem1_animacao_atirando()
-        else:
+        elif tecla_a < tecla_l:
             personagem2_animacao_atirando()
+        else:
+            mostra_empate()
     else:    
         personagem1_animacao_parado()
 
