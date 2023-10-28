@@ -20,6 +20,23 @@ def personagem1_animacao_atirando():
 
     tela.blit(personagem1_atirando[int(indice_personagem)], personagem1_retangulo)
 
+def tiro_perso1():
+    global velocidade
+
+    retangulo_tiro.x += velocidade
+
+    if retangulo_tiro.x < 0:
+        retangulo_tiro.x += velocidade
+
+    tela.blit(tiro, retangulo_tiro)
+
+def tiro_perso2():
+    global velocidade
+    if retangulo_tiro2.x > 0:
+        retangulo_tiro2.x -= velocidade
+
+    tela.blit(tiro,retangulo_tiro2)
+    
 def personagem2_animacao_parado():
     global indice_personagem
     indice_personagem += 0.10
@@ -41,14 +58,21 @@ def personagem2_animacao_atirando():
     
     tela.blit(personagem2_atirando_invertido, personagem2_retangulo)
 
+def personagem2_animacao_morte():
+    global indice_personagem
+    indice_personagem += 0.10
+    if indice_personagem > len(personagem2_morte) - 1:
+        indice_personagem = 0
+
+    personagem2_morte_invertido = pygame.transform.flip(personagem2_parado[int(indice_personagem)], True, False)
+
+    tela.blit(personagem2_morte_invertido, personagem2_retangulo)
+
 def mostra_empate():
     empate = pygame.image.load('assets/Empate/imagem_empate.png').convert_alpha()
     empate = pygame.transform.scale(empate, (500, 500))
     tela.blit(empate, (400, 150))
     
-
-
-
 def mostra_texto():
     global contador_segundos
 
@@ -112,6 +136,11 @@ for imagem in range(1, 11):
     img = pygame.transform.scale(img, (220, 220))
     personagem2_atirando.append(img)
 
+# Personagem 2 morte
+for imagem in range(1, 11):
+    img = pygame.image.load(f'assets/Personagem2/morte/Rambo_Die{imagem}.png').convert_alpha()
+    img = pygame.transform.scale(img, (220, 220))
+    personagem2_morte.append(img)
 
 personagem2_retangulo = personagem2_parado[indice_personagem].get_rect(center=(1150, 378))
 
@@ -126,8 +155,16 @@ contador_segundos = 0
 tecla_a = 0
 tecla_l = 0
 
-# Adiicona o tiro na tela
+# Pega a imagem do tiro
+velocidade = 8
+tiro = pygame.image.load('assets/Tiro/Imagem/Bullet.png').convert_alpha()
+tiro = pygame.transform.scale(tiro, (40, 40))
 
+# Retangulo do tiro personagem 1
+retangulo_tiro = tiro.get_rect(center=(300, 420))
+
+# Retangulo do tiro personagem 2
+retangulo_tiro2 = tiro.get_rect(center=(1000, 420))
 
 # Controla o fps
 fps = pygame.time.Clock()
@@ -154,8 +191,17 @@ while True:
     if contador_segundos >= 10:
         if tecla_a > tecla_l:
             personagem1_animacao_atirando()
+
+            personagem2_animacao_parado()
+
+            tiro_perso1()
         elif tecla_a < tecla_l:
             personagem2_animacao_atirando()
+
+            personagem1_animacao_parado()
+
+            tiro_perso2()
+
         else:
             mostra_empate()
     else:    
